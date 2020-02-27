@@ -1,0 +1,26 @@
+{
+  "files": {
+    "main.css": "/CTYPLNR/static/css/main.51e61b60.chunk.css",
+    "main.js": "/CTYPLNR/static/js/main.5edc7592.chunk.js",
+    "main.js.map": "/CTYPLNR/static/js/main.5edc7592.chunk.js.map",
+    "runtime-main.js": "/CTYPLNR/static/js/runtime-main.22e48e28.js",
+    "runtime-main.js.map": "/CTYPLNR/static/js/runtime-main.22e48e28.js.map",
+    "static/css/2.17297216.chunk.css": "/CTYPLNR/static/css/2.17297216.chunk.css",
+    "static/js/2.127280a0.chunk.js": "/CTYPLNR/static/js/2.127280a0.chunk.js",
+    "static/js/2.127280a0.chunk.js.map": "/CTYPLNR/static/js/2.127280a0.chunk.js.map",
+    "index.html": "/CTYPLNR/index.html",
+    "precache-manifest.91673f2aa59ad7c3f35384f66a85cc7c.js": "/CTYPLNR/precache-manifest.91673f2aa59ad7c3f35384f66a85cc7c.js",
+    "service-worker.js": "/CTYPLNR/service-worker.js",
+    "static/css/2.17297216.chunk.css.map": "/CTYPLNR/static/css/2.17297216.chunk.css.map",
+    "static/css/main.51e61b60.chunk.css.map": "/CTYPLNR/static/css/main.51e61b60.chunk.css.map",
+    "static/js/2.127280a0.chunk.js.LICENSE": "/CTYPLNR/static/js/2.127280a0.chunk.js.LICENSE",
+    "static/media/semantic.min.css": "/CTYPLNR/static/media/outline-icons.ef60a4f6.woff"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.22e48e28.js",
+    "static/css/2.17297216.chunk.css",
+    "static/js/2.127280a0.chunk.js",
+    "static/css/main.51e61b60.chunk.css",
+    "static/js/main.5edc7592.chunk.js"
+  ]
+}
