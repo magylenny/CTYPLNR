@@ -157,7 +157,9 @@ class GlasgowMap extends React.Component {
 
                     />
 
-                    <Scale/>
+                    <Scale
+                        method = {this.state.method}
+                    />
 
                     <GeoJSON
                         data={geo}
@@ -169,15 +171,16 @@ class GlasgowMap extends React.Component {
 
 
         function getStyle(feature){
-
+            let timeDiff;
             if(domain !== "City"){
                 if(method === "Car") {
                     time = feature.properties.CarTravelTimes[domain];
-
+                    timeDiff = 1;
                     //console.log(feature.properties.CarTravelTimes, feature.properties.CarTravelTimes["SecondarySchool"]);
                 }
                 else{
                         time = feature.properties.PublicTransportTravelTimes[domain];
+                        timeDiff = 3;
                     }
                 }
             else{
@@ -189,27 +192,27 @@ class GlasgowMap extends React.Component {
                  }
             }
 
-                if(time >= 0 && time < 1){
+                if(time >= 0 && time < timeDiff){
                     return{
                         color: "navy",
                         weight: 1.5
                     }
                 }
-                else if(time >= 1 && time < 2){
+                else if(time >= timeDiff && time < timeDiff*2){
                     return{
                         color:"royalblue",
                         weight: 1.5,
                         fillOpacity:0.5
                     }
                 }
-                else if(time >= 2 && time < 3){
+                else if(time >= timeDiff*2 && time < timeDiff*3){
                     return{
                         color:"seagreen",
                         weight: 1.5,
                         fillOpacity:0.5
                     }
                 }
-                else if(time >= 3 && time < 4){
+                else if(time >= timeDiff*3 && time < timeDiff*4){
                     return{
                         color:"yellow",
                         weight: 1.5,
@@ -217,7 +220,7 @@ class GlasgowMap extends React.Component {
                     }
 
                 }
-                else if(time >= 4 && time < 5){
+                else if(time >= timeDiff*4 && time < timeDiff*5){
                     return{
                         color:"orange",
                         weight: 1.5,
@@ -225,7 +228,7 @@ class GlasgowMap extends React.Component {
                     }
 
                 }
-                else if(time >= 5){
+                else if(time >= timeDiff*5){
                     return{
                         color:"maroon",
                         weight: 1.5,

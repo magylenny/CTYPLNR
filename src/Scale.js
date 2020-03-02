@@ -4,21 +4,43 @@ import Control from "react-leaflet-control";
 export default class Scale extends React.Component {
 
     render() {
+        let method = this.props.method;
+        let timeDiff,segment
+        if(method === "Car") {
+            timeDiff = 1;
+            segment = <Segment inverted style={{background: "#243665", height:"100%", width:"24vw"}}>
+                <Header inverted>
+                    <Header.Content style = {{color: "deepskyblue"}}>Travel times in minutes</Header.Content>
+                </Header>
+                <Grid  columns="equal" style={{ width: '22vw', height:"100%"}} padded>
+                    <Grid.Column style = {{background:'navy'}}>0 - {timeDiff}</Grid.Column>
+                    <Grid.Column style = {{background:'royalblue'}}>{timeDiff} - {timeDiff*2}</Grid.Column>
+                    <Grid.Column style = {{background:'seagreen'}}>{timeDiff*2} - {timeDiff*3}</Grid.Column>
+                    <Grid.Column color = "yellow">{timeDiff*3} - {timeDiff*4}</Grid.Column>
+                    <Grid.Column style = {{background:'darkorange'}}>{timeDiff*4} - {timeDiff*5}</Grid.Column>
+                    <Grid.Column style = {{background:'maroon'}}>{timeDiff*5}+</Grid.Column>
+                </Grid>
+            </Segment>
+        }
+        else{
+            timeDiff = 3;
+            segment = <Segment inverted style={{background: "#243665", height:"100%", width:"30vw"}}>
+                <Header inverted>
+                    <Header.Content style = {{color: "deepskyblue"}}>Travel times in minutes</Header.Content>
+                </Header>
+                <Grid  columns="equal" style={{ width: '28vw', height:"100%"}} padded>
+                    <Grid.Column style = {{background:'navy'}}>0 - {timeDiff}</Grid.Column>
+                    <Grid.Column style = {{background:'royalblue'}}>{timeDiff} - {timeDiff*2}</Grid.Column>
+                    <Grid.Column style = {{background:'seagreen'}}>{timeDiff*2} - {timeDiff*3}</Grid.Column>
+                    <Grid.Column color = "yellow">{timeDiff*3} - {timeDiff*4}</Grid.Column>
+                    <Grid.Column style = {{background:'darkorange'}}>{timeDiff*4} - {timeDiff*5}</Grid.Column>
+                    <Grid.Column style = {{background:'maroon'}}>{timeDiff*5}+</Grid.Column>
+                </Grid>
+            </Segment>
+        }
         return(
-            <Control position="bottomright" classname >
-                <Segment inverted style={{background: "#243665", height:"110px"}}>
-                    <Header color = "black" inverted>
-                        <Header.Content style = {{color: "deepskyblue"}}>Travel times in minutes</Header.Content>
-                    </Header>
-                    <Grid  columns="equal" style={{ width: '340px'}} padded>
-                        <Grid.Column style = {{background:'navy'}}>0 - 1</Grid.Column>
-                        <Grid.Column style = {{background:'royalblue'}}>1 - 2</Grid.Column>
-                        <Grid.Column style = {{background:'seagreen'}}>2 - 3</Grid.Column>
-                        <Grid.Column color = "yellow">3 - 4</Grid.Column>
-                        <Grid.Column style = {{background:'darkorange'}}>4 - 5</Grid.Column>
-                        <Grid.Column style = {{background:'maroon'}}>5+</Grid.Column>
-                    </Grid>
-                </Segment>
+            <Control position="bottomright">
+                {segment}
 
             </Control>
         );

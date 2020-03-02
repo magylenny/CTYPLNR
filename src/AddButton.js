@@ -352,6 +352,7 @@ export default class AddButton extends React.Component {
         const geojson = this.props.geo;
 
         return(
+
             <Control position="topright" >
                 <Modal  size = "tiny"
                     trigger={ <Button onClick = {this.handleOpen}
@@ -396,6 +397,7 @@ export default class AddButton extends React.Component {
                     </Modal.Actions>
             </Modal>
             </Control>
+
 
         );
     }
