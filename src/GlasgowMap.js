@@ -22,12 +22,13 @@ L.Icon.Default.mergeOptions({
 let mapCenter;
 let zoomLevel;
 let minZoomLevel;
+let time = 0;
 
 const tileLayerAtrribute = '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors';
 let tileLayerUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
 
 let glasgow = "https://api.npoint.io/aa3a9094c684db09d0f8";
-let time = 0;
+
 let methodBoolean = true;
 class GlasgowMap extends React.Component {
 
@@ -49,20 +50,12 @@ class GlasgowMap extends React.Component {
                 "PostOffice": false,
                 "ShoppingFacilities": false
             },
-            markerPosition:[55.8595, -4.2518]
+
         };
     }
 
     callbackFunction = (childData) => {
-
         this.setState({geo: childData});
-
-
-    };
-
-    getMarkerPosition = (pos) => {
-        this.setState({markerPosition: pos});
-        console.log(pos);
     };
 
     componentDidMount() {
@@ -71,6 +64,7 @@ class GlasgowMap extends React.Component {
     };
 
     getGlasgow = () => {
+
         this.setState({isFetching: true});
         axios.get(glasgow).then(res => {
             this.setState({
@@ -125,8 +119,9 @@ class GlasgowMap extends React.Component {
    render() {
 
         console.log("re-rendering...");
-        const { isFetching, geo, domain, method,city, markerPosition} = this.state;
 
+
+        const { isFetching, geo, domain, method,city} = this.state;
         if(city === "Glasgow"){
             mapCenter = [55.8595, -4.2518];
             zoomLevel = 12;
@@ -153,12 +148,12 @@ class GlasgowMap extends React.Component {
                         attribution={tileLayerAtrribute}
                         url={tileLayerUrl}
                     />
-                    <Marker position = {markerPosition} />
+
 
                     <AddButton
                         geo={this.state.geo}
                         parentCallback={this.callbackFunction}
-                        marker = {this.getMarkerPosition}
+
 
                     />
 
@@ -174,10 +169,12 @@ class GlasgowMap extends React.Component {
 
 
         function getStyle(feature){
-            console.log("getting style");
+
             if(domain !== "City"){
                 if(method === "Car") {
                     time = feature.properties.CarTravelTimes[domain];
+
+                    //console.log(feature.properties.CarTravelTimes, feature.properties.CarTravelTimes["SecondarySchool"]);
                 }
                 else{
                         time = feature.properties.PublicTransportTravelTimes[domain];

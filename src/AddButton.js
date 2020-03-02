@@ -4,7 +4,7 @@ import Control from "react-leaflet-control";
 import axios from 'axios';
 import turfCentroid from "@turf/centroid";
 import * as turf from "@turf/helpers";
-import {geometry} from "@turf/helpers";
+
 
     const facilities = [{
         key: 'GP',
@@ -43,9 +43,12 @@ import {geometry} from "@turf/helpers";
     let current;
     let expression;
     let datazoneCoordinates = {};
+let promises = [];
+let times = {};
 
 
-export default class Scale extends React.Component {
+export default class AddButton extends React.Component {
+
 
     constructor(props){
         super(props);
@@ -67,7 +70,7 @@ export default class Scale extends React.Component {
       this.setState({addDataZone: data.value});
     };
 
-    handleClose =  (geo) => {
+    handleClose = async (geo) => {
         this.setState({modalOpen : false});
         let datacode = parseInt(this.state.addDataZone.substr(1));
         let coords = [];
@@ -78,10 +81,14 @@ export default class Scale extends React.Component {
         let neighbours = this.getNeighbours();
 
         let points = this.getCoordinates(neighbours);
-        this.calculateTravelTimes(sourcecentroid, points,geo);
 
 
-        this.props.parentCallback(geo);
+        this.calculateTravelTimes(sourcecentroid,points,geo);
+
+        // await this.checkChanges(times,geo);
+
+        //console.log(geo);
+       //
 
     };
 
@@ -119,7 +126,6 @@ export default class Scale extends React.Component {
         let centroid;
         let pairs= {};
         for(var a = 0; a < neighbours.length; a++) {
-
             currentCode =neighbours[a];
             let current = parseInt(currentCode.substr(1));
             coordinates.push(datazoneCoordinates[current]);
@@ -131,10 +137,12 @@ export default class Scale extends React.Component {
         return pairs;
     };
 
-    calculateTravelTimes = (sourcepoint, destpoints, geo) => {
+    calculateTravelTimes = async (sourcepoint, destpoints,geo) => {
+
 
         let promises = [];
         let times = {};
+
 
         let axiosConfig = {
             headers: {
@@ -144,7 +152,9 @@ export default class Scale extends React.Component {
                 'X-Api-Key': '3b67e6f052bc7121e2f6bcb917024443'
             }
         };
+
         for (let key in destpoints) {
+            times[key] = {};
             let dataPost = {
                 "locations": [
                     {
@@ -179,12 +189,94 @@ export default class Scale extends React.Component {
             };
 
             promises.push(
-                axios.post('http://api.traveltimeapp.com/v4/routes', dataPost, axiosConfig)
+                axios.post('https://api.traveltimeapp.com/v4/routes', dataPost, axiosConfig)
                     .then((res) => {
                         let minute = (res.data.results[0].locations[0].properties[0].travel_time) / 60;
-                        let time = Math.round(minute * 10) / 10;
 
-                        times[key] = time;
+                        let time = Math.round(minute * 10) / 10;
+                        times[key]["Car"] = time;
+
+                    })
+                    .catch((err) => {
+                        console.log("AXIOS ERROR: ", err);
+                    })
+            );
+
+
+/*            dataPost.departure_searches[0].transportation.type = "public_transport";
+            promises.push(
+                axios.post('https://api.traveltimeapp.com/v4/routes', dataPost, axiosConfig)
+                    .then((res) => {
+                        let minute = (res.data.results[0].locations[0].properties[0].travel_time) / 60;
+
+                        let time = Math.round(minute * 10) / 10;
+                        times[key]["PT"] = time;
+
+                    })
+                    .catch((err) => {
+                        console.log("AXIOS ERROR: ", err);
+                    })
+            );*/
+        }
+
+        console.log(times);
+        Promise.all(promises).then(() =>this.calculatePTravelTimes(sourcepoint, destpoints,times,geo));
+    };
+    calculatePTravelTimes = async (sourcepoint, destpoints,times, geo) => {
+
+        let promises = [];
+
+        let axiosConfig = {
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'X-Application-Id': 'cd8dab5e',
+                'X-Api-Key': '3b67e6f052bc7121e2f6bcb917024443'
+            }
+        };
+
+        for (let key in destpoints) {
+
+            let dataPost1 = {
+                "locations": [
+                    {
+                        "id": "Facility",
+                        "coords": {
+                            "lat": sourcepoint.geometry.coordinates[1],
+                            "lng": sourcepoint.geometry.coordinates[0]
+                        }
+                    },
+                    {
+                        "id": "DataZone centroid",
+                        "coords": {
+                            "lat": destpoints[key].geometry.coordinates[1],
+                            "lng": destpoints[key].geometry.coordinates[0]
+                        }
+                    }
+                ],
+                "departure_searches": [
+                    {
+                        "id": "departure search example",
+                        "departure_location_id": "Facility",
+                        "arrival_location_ids": [
+                            "DataZone centroid"
+                        ],
+                        "transportation": {
+                            "type": "public_transport"
+                        },
+                        "departure_time": "2020-02-20T10:00:00Z",
+                        "properties": ["travel_time", "distance", "route"]
+                    }
+                ]
+            };
+
+            promises.push(
+                axios.post('https://api.traveltimeapp.com/v4/routes', dataPost1, axiosConfig)
+                    .then((res) => {
+                        let minute = (res.data.results[0].locations[0].properties[0].travel_time) / 60;
+
+                        let time = Math.round(minute * 10) / 10;
+                        times[key]["PT"] = time;
 
                     })
                     .catch((err) => {
@@ -192,16 +284,51 @@ export default class Scale extends React.Component {
                     })
             );
         }
-        Promise.all(promises).then(() =>this.checkChanges(times, geo));
 
+
+        console.log(times);
+        Promise.all(promises).then(() =>this.checkChanges(times,geo));
+    };
+
+
+    checkChanges = async(times, geo)  => {
+        console.log("most leptem be");
+
+        for (let key in times) {
+
+            for (let i = 0; i < geo.features.length; i++){
+                if(geo.features[i].properties.DataZone === key){
+                    //compare new time with old time for neighbours
+                    if(geo.features[i].properties.CarTravelTimes[this.state.addFacility] > times[key]["Car"]){
+
+                        geo.features[i].properties.CarTravelTimes[this.state.addFacility] = times[key]["Car"]
+                    }
+                    if(geo.features[i].properties.PublicTransportTravelTimes[this.state.addFacility] > times[key]["PT"]){
+
+                        geo.features[i].properties.PublicTransportTravelTimes[this.state.addFacility] = times[key]["PT"]
+                    }
+                }
+                //assign  0 travel time to data zone facility is located in
+                else if(geo.features[i].properties.DataZone === this.state.addDataZone) {
+
+                    geo.features[i].properties.CarTravelTimes[this.state.addFacility] = "1.0";
+                    geo.features[i].properties.PublicTransportTravelTimes[this.state.addFacility] = "1.0";
+                }
+                else{
+
+                }
+
+            }
+        }
+        console.log("checkchanges finished");
+        this.props.parentCallback(geo);
     };
 
     //to load all data zones in dropdown options
    populateDropdown = (data) => {
        let code;
        let coords;
-
-       for (var i = 0; i < data.features.length; i++) {
+       for (let i = 0; i < data.features.length; i++) {
            current = data.features[i].properties;
            expression = current.Name + " (" + current.DataZone + ")";
            datazones[i] = {
@@ -218,29 +345,7 @@ export default class Scale extends React.Component {
        return datazones;
    };
 
-   checkChanges = (times, geo)  => {
 
-       for (let key in times) {
-
-           for (let i = 0; i < geo.features.length; i++){
-               if(geo.features[i].properties.DataZone === key){
-                //compare new time with old time
-                   if(geo.features[i].properties.CarTravelTimes[this.state.addFacility] > times[key]){
-
-                       geo.features[i].properties.CarTravelTimes[this.state.addFacility] = times[key]
-                   }
-               }
-               else if(geo.features[i].properties.DataZone === this.state.addDataZone) {
-
-                   geo.features[i].properties.CarTravelTimes[this.state.addFacility] = 0
-               }
-               else{
-
-               }
-
-           }
-       }
-   };
 
     render() {
 
