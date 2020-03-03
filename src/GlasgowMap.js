@@ -7,6 +7,7 @@ import Scale from './Scale';
 import AddButton from "./AddButton";
 import SideButtons from "./SideButtons";
 import Header from "./Header"
+import ChangeList from "./ChangeList";
 import axios from 'axios';
 import 'semantic-ui-css/semantic.min.css'
 import L from 'leaflet';
@@ -41,7 +42,7 @@ class GlasgowMap extends React.Component {
             domain: "City",
             method: 'Car',
             city: "Glasgow",
-            previousDomain:"",
+            dataZoneList:[],
             activeDomains: {
                 "City": true,
                 "GP": false,
@@ -58,8 +59,15 @@ class GlasgowMap extends React.Component {
         this.setState({geo: childData});
     };
 
+    callbackFunctionSubmit = (datazone) => {
+        console.log(datazone);
+        this.setState({
+            dataZoneList: datazone
+        });
+    };
+
     componentDidMount() {
-        document.title = 'Glasgow Planner';
+        document.title = 'CTYPLNR';
         this.getGlasgow();
     };
 
@@ -153,9 +161,13 @@ class GlasgowMap extends React.Component {
                     <AddButton
                         geo={this.state.geo}
                         parentCallback={this.callbackFunction}
+                        parentCallbackSumbit = {this.callbackFunctionSubmit}
 
 
                     />
+                    <ChangeList
+                        dataZone={this.state.dataZoneList}
+                        />
 
                     <Scale
                         method = {this.state.method}

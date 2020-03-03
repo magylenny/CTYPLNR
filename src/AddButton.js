@@ -43,12 +43,8 @@ import * as turf from "@turf/helpers";
     let current;
     let expression;
     let datazoneCoordinates = {};
-let promises = [];
-let times = {};
-
 
 export default class AddButton extends React.Component {
-
 
     constructor(props){
         super(props);
@@ -57,7 +53,7 @@ export default class AddButton extends React.Component {
             modalOpen : false,
             addFacility: "",
             addDataZone: "",
-
+            listitems: []
         };
     }
     handleOpen = () => this.setState({ modalOpen: true });
@@ -71,7 +67,11 @@ export default class AddButton extends React.Component {
     };
 
     handleClose = async (geo) => {
-        this.setState({modalOpen : false});
+        this.setState({
+            modalOpen : false,
+            listitems : this.state.listitems.concat(this.state.addDataZone),
+        });
+
         let datacode = parseInt(this.state.addDataZone.substr(1));
         let coords = [];
         coords.push(datazoneCoordinates[datacode]);
@@ -201,22 +201,6 @@ export default class AddButton extends React.Component {
                         console.log("AXIOS ERROR: ", err);
                     })
             );
-
-
-/*            dataPost.departure_searches[0].transportation.type = "public_transport";
-            promises.push(
-                axios.post('https://api.traveltimeapp.com/v4/routes', dataPost, axiosConfig)
-                    .then((res) => {
-                        let minute = (res.data.results[0].locations[0].properties[0].travel_time) / 60;
-
-                        let time = Math.round(minute * 10) / 10;
-                        times[key]["PT"] = time;
-
-                    })
-                    .catch((err) => {
-                        console.log("AXIOS ERROR: ", err);
-                    })
-            );*/
         }
 
         console.log(times);
@@ -322,6 +306,7 @@ export default class AddButton extends React.Component {
         }
         console.log("checkchanges finished");
         this.props.parentCallback(geo);
+        this.props.parentCallbackSumbit(this.state.listitems);
     };
 
     //to load all data zones in dropdown options

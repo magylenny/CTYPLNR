@@ -8,7 +8,7 @@ export default class Scale extends React.Component {
         let timeDiff,segment
         if(method === "Car") {
             timeDiff = 1;
-            segment = <Segment inverted style={{background: "#243665", height:"100%", width:"24vw"}}>
+            segment = <Segment inverted style={{background: "rgba(36,54,101,0.7)", height:"100%", width:"24vw"}}>
                 <Header inverted>
                     <Header.Content style = {{color: "deepskyblue"}}>Travel times in minutes</Header.Content>
                 </Header>
