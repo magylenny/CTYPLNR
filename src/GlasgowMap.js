@@ -42,7 +42,7 @@ class GlasgowMap extends React.Component {
             domain: "City",
             method: 'Car',
             city: "Glasgow",
-            dataZoneList:[],
+            changesList:[],
             activeDomains: {
                 "City": true,
                 "GP": false,
@@ -59,10 +59,9 @@ class GlasgowMap extends React.Component {
         this.setState({geo: childData});
     };
 
-    callbackFunctionSubmit = (datazone) => {
-        console.log(datazone);
+    callbackFunctionSubmit = (changes) => {
         this.setState({
-            dataZoneList: datazone
+            changesList: changes
         });
     };
 
@@ -166,7 +165,7 @@ class GlasgowMap extends React.Component {
 
                     />
                     <ChangeList
-                        dataZone={this.state.dataZoneList}
+                        changes={this.state.changesList}
                         />
 
                     <Scale

@@ -69,7 +69,7 @@ export default class AddButton extends React.Component {
     handleClose = async (geo) => {
         this.setState({
             modalOpen : false,
-            listitems : this.state.listitems.concat(this.state.addDataZone),
+
         });
 
         let datacode = parseInt(this.state.addDataZone.substr(1));
@@ -277,7 +277,11 @@ export default class AddButton extends React.Component {
 
     checkChanges = async(times, geo)  => {
         console.log("most leptem be");
-
+        let changesDict={
+            "DataZone":this.state.addDataZone,
+            "Facility":this.state.addFacility,
+            "NeighbouringDataZones":[]
+        };
         for (let key in times) {
 
             for (let i = 0; i < geo.features.length; i++){
@@ -303,8 +307,16 @@ export default class AddButton extends React.Component {
                 }
 
             }
+
+            let timeDict = {[key]:times[key]["Car"]};
+            changesDict["NeighbouringDataZones"].push(timeDict);
+            changesDict["NeighbouringDataZones"].push({[key]:times[key]["PT"]})
         }
+
+        this.setState({listitems : this.state.listitems.concat(changesDict)});
         console.log("checkchanges finished");
+        console.log(times);
+
         this.props.parentCallback(geo);
         this.props.parentCallbackSumbit(this.state.listitems);
     };
