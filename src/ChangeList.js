@@ -7,7 +7,7 @@ import './index.css';
 let contentArray;
 export default class ChangeList extends React.Component {
 
-    populateContents = (array) =>{
+    /*populateContents = (array) =>{
         for(let i=0; i<array.length; i++){
             let currentContent = [];
             for(let k = 0; k<Object.keys(array[i]["NeighboringDataZone"]).length; k++) {
@@ -15,13 +15,13 @@ export default class ChangeList extends React.Component {
             }
         }
 
-    };
+    };*/
 
     render() {
 
 
         const changes = this.props.changes;
-        this.populateContents(changes);
+
 
 
         const panels = _.times(changes.length, (i) => ({
@@ -29,9 +29,7 @@ export default class ChangeList extends React.Component {
             title: changes[i]["Facility"].concat(" in " + changes[i]["DataZone"]),
             content: "New travel time from ".concat(
                 Object.keys(changes[i]["NeighbouringDataZones"][0])[0] +" is: x",
-                Object.keys(changes[i]["NeighbouringDataZones"][0])[0] +" is: x",
-                Object.keys(changes[i]["NeighbouringDataZones"][0])[0] +" is: x",
-                Object.keys(changes[i]["NeighbouringDataZones"][0])[0] +" is: x",
+
             )
         }));
         return(
