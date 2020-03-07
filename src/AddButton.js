@@ -182,7 +182,7 @@ export default class AddButton extends React.Component {
                         "transportation": {
                             "type": "driving"
                         },
-                        "departure_time": "2020-02-20T10:00:00Z",
+                        "departure_time": "2020-03-20T10:00:00Z",
                         "properties": ["travel_time", "distance", "route"]
                     }
                 ]
@@ -248,7 +248,7 @@ export default class AddButton extends React.Component {
                         "transportation": {
                             "type": "public_transport"
                         },
-                        "departure_time": "2020-02-20T10:00:00Z",
+                        "departure_time": "2020-03-20T10:00:00Z",
                         "properties": ["travel_time", "distance", "route"]
                     }
                 ]
@@ -264,12 +264,10 @@ export default class AddButton extends React.Component {
 
                     })
                     .catch((err) => {
-                        console.log("AXIOS ERROR: ", err);
+                        console.log("AXIOS ERROR: ", err.response);
                     })
             );
         }
-
-
         console.log(times);
         Promise.all(promises).then(() =>this.checkChanges(times,geo));
     };
@@ -307,10 +305,12 @@ export default class AddButton extends React.Component {
                 }
 
             }
-
-            let timeDict = {[key]:times[key]["Car"]};
+            let timeArray = [times[key]["Car"], times[key]["PT"]];
+            let nameKey = this.translateToName(key, geo);
+            console.log(nameKey);
+            let timeDict = {[nameKey]:timeArray};
             changesDict["NeighbouringDataZones"].push(timeDict);
-            changesDict["NeighbouringDataZones"].push({[key]:times[key]["PT"]})
+            //changesDict["NeighbouringDataZones"].push({[key]:times[key]["PT"]})
         }
 
         this.setState({listitems : this.state.listitems.concat(changesDict)});
@@ -319,6 +319,15 @@ export default class AddButton extends React.Component {
 
         this.props.parentCallback(geo);
         this.props.parentCallbackSumbit(this.state.listitems);
+    };
+
+    translateToName = (datacode, geo) => {
+        console.log(datacode);
+        for(let i = 0; i<geo.features.length; i++){
+            if(geo.features[i].properties.DataZone === datacode){
+                return geo.features[i].properties.Name;
+            }
+        }
     };
 
     //to load all data zones in dropdown options
@@ -341,8 +350,6 @@ export default class AddButton extends React.Component {
        }
        return datazones;
    };
-
-
 
     render() {
 

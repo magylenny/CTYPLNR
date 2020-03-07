@@ -102,6 +102,10 @@
   color: rgba(36,54,101,0.7) !important;
 
   background-color: rgba(0,191,255,0.7) !important;
+  white-space: pre-line !important;
+}
+.display-linebreak {
+
 }
 
 
