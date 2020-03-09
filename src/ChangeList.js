@@ -77,8 +77,8 @@ export default class ChangeList extends React.Component {
         return(
             <Control>
                 <Segment inverted style={{background: "rgba(36,54,101,0.7)", height:"57vh", width:"14vw"}}>
-
-                    <Accordion style={{overflow: 'auto', maxHeight: 400 }} className="accordion"
+                    Facilites recently added:
+                    <Accordion style={{overflow: 'auto', maxHeight: 375 }} className="accordion"
                                exclusive={false}
                                panels={panels}
                                styled
