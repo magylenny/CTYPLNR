@@ -9,14 +9,15 @@ export default class ChangeList extends React.Component {
     populateContents = (array) =>{
         console.log(array);
         let arrayOfContents = [];
-        let carTime;
-        let ptTime;
+
         for(let i=0; i<array.length; i++){
             let currentContent = "";
+
             for(let k = 0; k<Object.keys(array[i]["NeighbouringDataZones"]).length; k++) {
+                let carTime;
+                let ptTime;
                 //get key and value, create a string (line) ,push string line to current content
                 let dz = Object.keys((array[i]["NeighbouringDataZones"][k]));
-                console.log(array[i]["NeighbouringDataZones"][k][dz]);
                 if("CarChanges" in array[i]["NeighbouringDataZones"][k][dz]) {
                     carTime = "Car: " + array[i]["NeighbouringDataZones"][k][dz]["CarChanges"];
                 }
@@ -77,7 +78,7 @@ export default class ChangeList extends React.Component {
             <Control>
                 <Segment inverted style={{background: "rgba(36,54,101,0.7)", height:"57vh", width:"14vw"}}>
 
-                    <Accordion className="accordion"
+                    <Accordion style={{overflow: 'auto', maxHeight: 400 }} className="accordion"
                                exclusive={false}
                                panels={panels}
                                styled

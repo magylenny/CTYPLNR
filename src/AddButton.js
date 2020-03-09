@@ -59,31 +59,46 @@ export default class AddButton extends React.Component {
     handleOpen = () => this.setState({ modalOpen: true });
 
     handleFacilityChange = (event, data) => {
-        this.setState({addFacility: data.value});
+        console.log(data.value);
+;     this.setState({addFacility: data.value});
     };
 
     handleDataZoneChange = (event, data) => {
       this.setState({addDataZone: data.value});
     };
 
-    handleClose = async (geo) => {
+    handleClose = () =>{
         this.setState({
             modalOpen : false,
 
         });
+    }
 
-        let datacode = parseInt(this.state.addDataZone.substr(1));
-        let coords = [];
-        coords.push(datazoneCoordinates[datacode]);
-        let sourcepolygon = turf.polygon(coords);
-        let sourcecentroid = turfCentroid(sourcepolygon);
+    handleSubmit = async (geo) => {
 
-        let neighbours = this.getNeighbours();
+        this.setState({
+            modalOpen : false,
 
-        let points = this.getCoordinates(neighbours);
+        });
+        //check if both datazone and facility are selected
+        if(this.state.addDataZone && this.state.addFacility) {
+
+            let datacode = parseInt(this.state.addDataZone.substr(1));
+            let coords = [];
+            coords.push(datazoneCoordinates[datacode]);
+            console.log(coords);
+            let sourcepolygon = turf.multiPolygon([coords]);
+
+            let sourcecentroid = turfCentroid(sourcepolygon);
+            console.log(sourcecentroid);
+
+            let neighbours = this.getNeighbours();
+
+            let points = this.getCoordinates(neighbours);
 
 
-        this.calculateTravelTimes(sourcecentroid,points,geo);
+            this.calculateTravelTimes(sourcecentroid, points, geo);
+        }
 
         // await this.checkChanges(times,geo);
 
@@ -129,7 +144,7 @@ export default class AddButton extends React.Component {
             currentCode =neighbours[a];
             let current = parseInt(currentCode.substr(1));
             coordinates.push(datazoneCoordinates[current]);
-            polygon = turf.polygon(coordinates);
+            polygon = turf.multiPolygon([coordinates]);
             centroid = turfCentroid(polygon);
             pairs[currentCode] = centroid;
         }
@@ -142,6 +157,11 @@ export default class AddButton extends React.Component {
 
         let promises = [];
         let times = {};
+        let owntimes = {
+            "Car" : 1.0,
+            "PT" : 3.0
+        };
+        times[this.state.addDataZone] = owntimes;
 
 
         let axiosConfig = {
@@ -198,7 +218,7 @@ export default class AddButton extends React.Component {
 
                     })
                     .catch((err) => {
-                        console.log("AXIOS ERROR: ", err);
+                        console.log("AXIOS ERROR: ", err.respond);
                     })
             );
         }
@@ -207,69 +227,71 @@ export default class AddButton extends React.Component {
         Promise.all(promises).then(() =>this.calculatePTravelTimes(sourcepoint, destpoints,times,geo));
     };
     calculatePTravelTimes = async (sourcepoint, destpoints,times, geo) => {
+        if(this.state.addFacility !== "PrimarySchool" || this.state.addFacility !== "SecondarySchool") {
 
-        let promises = [];
+            let promises = [];
 
-        let axiosConfig = {
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-                'X-Application-Id': 'cd8dab5e',
-                'X-Api-Key': '3b67e6f052bc7121e2f6bcb917024443'
-            }
-        };
-
-        for (let key in destpoints) {
-
-            let dataPost1 = {
-                "locations": [
-                    {
-                        "id": "Facility",
-                        "coords": {
-                            "lat": sourcepoint.geometry.coordinates[1],
-                            "lng": sourcepoint.geometry.coordinates[0]
-                        }
-                    },
-                    {
-                        "id": "DataZone centroid",
-                        "coords": {
-                            "lat": destpoints[key].geometry.coordinates[1],
-                            "lng": destpoints[key].geometry.coordinates[0]
-                        }
-                    }
-                ],
-                "departure_searches": [
-                    {
-                        "id": "departure search example",
-                        "departure_location_id": "Facility",
-                        "arrival_location_ids": [
-                            "DataZone centroid"
-                        ],
-                        "transportation": {
-                            "type": "public_transport"
-                        },
-                        "departure_time": "2020-03-20T10:00:00Z",
-                        "properties": ["travel_time", "distance", "route"]
-                    }
-                ]
+            let axiosConfig = {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-Application-Id': 'cd8dab5e',
+                    'X-Api-Key': '3b67e6f052bc7121e2f6bcb917024443'
+                }
             };
 
-            promises.push(
-                axios.post('https://api.traveltimeapp.com/v4/routes', dataPost1, axiosConfig)
-                    .then((res) => {
-                        let minute = (res.data.results[0].locations[0].properties[0].travel_time) / 60;
+            for (let key in destpoints) {
 
-                        let time = Math.round(minute * 10) / 10;
-                        times[key]["PT"] = time;
+                let dataPost1 = {
+                    "locations": [
+                        {
+                            "id": "Facility",
+                            "coords": {
+                                "lat": sourcepoint.geometry.coordinates[1],
+                                "lng": sourcepoint.geometry.coordinates[0]
+                            }
+                        },
+                        {
+                            "id": "DataZone centroid",
+                            "coords": {
+                                "lat": destpoints[key].geometry.coordinates[1],
+                                "lng": destpoints[key].geometry.coordinates[0]
+                            }
+                        }
+                    ],
+                    "departure_searches": [
+                        {
+                            "id": "departure search example",
+                            "departure_location_id": "Facility",
+                            "arrival_location_ids": [
+                                "DataZone centroid"
+                            ],
+                            "transportation": {
+                                "type": "public_transport"
+                            },
+                            "departure_time": "2020-03-20T10:00:00Z",
+                            "properties": ["travel_time", "distance", "route"]
+                        }
+                    ]
+                };
 
-                    })
-                    .catch((err) => {
-                        console.log("AXIOS ERROR: ", err.response);
-                    })
-            );
+                promises.push(
+                    axios.post('https://api.traveltimeapp.com/v4/routes', dataPost1, axiosConfig)
+                        .then((res) => {
+                            let minute = (res.data.results[0].locations[0].properties[0].travel_time) / 60;
+
+                            let time = Math.round(minute * 10) / 10;
+                            times[key]["PT"] = time;
+
+                        })
+                        .catch((err) => {
+                            console.log("AXIOS ERROR: ", err.response);
+                        })
+                );
+            }
+
+            Promise.all(promises).then(() => this.checkChanges(times, geo));
         }
-        console.log(times);
-        Promise.all(promises).then(() =>this.checkChanges(times,geo));
     };
 
 
@@ -291,16 +313,14 @@ export default class AddButton extends React.Component {
                 if(geo.features[i].properties.DataZone === key){
                     //compare new time with old time for neighbours
                     if(geo.features[i].properties.CarTravelTimes[this.state.addFacility] > times[key]["Car"]){
-                        methodTimeString = geo.features[i].properties.CarTravelTimes[this.state.addFacility] + " -> " + times[key]["Car"];
+                        methodTimeString = geo.features[i].properties.CarTravelTimes[this.state.addFacility] + " => " + times[key]["Car"];
                         //console.log(methodTimeString);
                         methodTimeDict["CarChanges"] = methodTimeString;
                         //console.log(methodTimeDict["CarChanges"]);
-
-
                         geo.features[i].properties.CarTravelTimes[this.state.addFacility] = times[key]["Car"]
                     }
                     if(geo.features[i].properties.PublicTransportTravelTimes[this.state.addFacility] > times[key]["PT"]){
-                        methodTimeString = geo.features[i].properties.PublicTransportTravelTimes[this.state.addFacility] + " -> " + times[key]["PT"];
+                        methodTimeString = geo.features[i].properties.PublicTransportTravelTimes[this.state.addFacility] + " => " + times[key]["PT"];
                         //console.log(methodTimeString);
                         methodTimeDict["PTChanges"] = methodTimeString;
                         //console.log(methodTimeDict["PTChanges"]);
@@ -309,16 +329,6 @@ export default class AddButton extends React.Component {
                     }
 
                 }
-                //assign  0 travel time to data zone facility is located in
-                else if(geo.features[i].properties.DataZone === this.state.addDataZone) {
-                    geo.features[i].properties.CarTravelTimes[this.state.addFacility] = "1.0";
-                    geo.features[i].properties.PublicTransportTravelTimes[this.state.addFacility] = "1.0";
-                }
-                else{
-
-                }
-
-
             }
 
             let nameKey = this.translateToName(key, geo);
@@ -343,7 +353,7 @@ export default class AddButton extends React.Component {
     };
 
     translateToName = (datacode, geo) => {
-        //console.log(datacode);
+        console.log(datacode);
         for(let i = 0; i<geo.features.length; i++){
             if(geo.features[i].properties.DataZone === datacode){
                 return geo.features[i].properties.Name;
@@ -352,6 +362,7 @@ export default class AddButton extends React.Component {
     };
 
     parseToString = (facility) =>{
+        console.log(facility);
         switch(facility) {
             case "GP":
                 return "GP";
@@ -361,7 +372,7 @@ export default class AddButton extends React.Component {
                 return "Secondary School";
             case "PostOffice":
                 return "Post Office";
-            case "ShoppingFacility":
+            case "ShoppingFacilities":
                 return "Shopping Facility";
             default:
             // code block
@@ -430,7 +441,7 @@ export default class AddButton extends React.Component {
                     </Modal.Content>
                     <Modal.Actions className = "modalAction">
                         <Button className = "modalButton"
-                            onClick={()=> this.handleClose(geojson)}
+                            onClick={()=> this.handleSubmit(geojson)}
                             positive
                             labelPosition='right'
                             icon='checkmark'

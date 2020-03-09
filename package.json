@@ -1,5 +1,4 @@
 {
-
   "name": "untitled6",
   "version": "0.1.0",
   "private": true,
@@ -18,7 +17,8 @@
     "react-router-dom": "^5.1.2",
     "react-scripts": "^3.3.0",
     "semantic-ui-css": "^2.4.1",
-    "semantic-ui-react": "^0.88.2"
+    "semantic-ui-react": "^0.88.2",
+    "turf": "^7.0.0-alpha.1"
   },
   "homepage": "http://magylenny.github.io/CTYPLNR",
   "scripts": {

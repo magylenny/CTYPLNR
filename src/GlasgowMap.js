@@ -255,7 +255,7 @@ class GlasgowMap extends React.Component {
             }
 
        function onEachFeature (feature, layer) {
-           layer.bindPopup("Name: " + feature.properties.Name + "<br>" + "Time: " + feature.properties.DataZone);
+           layer.bindPopup("Name: " + feature.properties.Name + "<br>" + "DataCode: " + feature.properties.DataZone);
        }
 
        return (
