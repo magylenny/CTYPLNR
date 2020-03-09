@@ -9,20 +9,33 @@ export default class ChangeList extends React.Component {
     populateContents = (array) =>{
         console.log(array);
         let arrayOfContents = [];
+        let carTime;
+        let ptTime;
         for(let i=0; i<array.length; i++){
             let currentContent = "";
             for(let k = 0; k<Object.keys(array[i]["NeighbouringDataZones"]).length; k++) {
                 //get key and value, create a string (line) ,push string line to current content
                 let dz = Object.keys((array[i]["NeighbouringDataZones"][k]));
-                let carTime = array[i]["NeighbouringDataZones"][k][dz][0];
-                let ptTime = array[i]["NeighbouringDataZones"][k][dz][1];
+                console.log(array[i]["NeighbouringDataZones"][k][dz]);
+                if("CarChanges" in array[i]["NeighbouringDataZones"][k][dz]) {
+                    carTime = "Car: " + array[i]["NeighbouringDataZones"][k][dz]["CarChanges"];
+                }
+                if("PTChanges" in array[i]["NeighbouringDataZones"][k][dz]) {
+                    ptTime = "Public Transport: " + array[i]["NeighbouringDataZones"][k][dz]["PTChanges"];
+                }
                 //console.log(ptTime);
-                let line = dz;
+                let line = dz + "\n";
                 //console.log(line);
                 currentContent = currentContent + line;
-                line = "\n" + carTime + " "+ ptTime +"\n";
-                currentContent = currentContent+line;
-                //console.log(currentContent);
+                if(carTime) {
+                    line = carTime + "\n";
+                    currentContent = currentContent+line;
+                }
+                if(ptTime){
+                    line = ptTime +"\n";
+                    currentContent = currentContent+line;
+                }
+                console.log(currentContent);
             }
             //push string (currentContent) to array
             arrayOfContents.push(currentContent);
@@ -65,14 +78,14 @@ export default class ChangeList extends React.Component {
                 <Segment inverted style={{background: "rgba(36,54,101,0.7)", height:"57vh", width:"14vw"}}>
 
                     <Accordion className="accordion"
-                        exclusive={false}
-                        panels={panels}
+                               exclusive={false}
+                               panels={panels}
                                styled
-                        fluid
-                        >
+                               fluid
+                    >
                     </Accordion>
                 </Segment>
             </Control>
         );
     }
-}
+};

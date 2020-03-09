@@ -276,27 +276,41 @@ export default class AddButton extends React.Component {
     checkChanges = async(times, geo)  => {
         console.log("most leptem be");
         let changesDict={
-            "DataZone":this.state.addDataZone,
-            "Facility":this.state.addFacility,
+            "DataZone":this.translateToName(this.state.addDataZone, geo),
+            "Facility":this.parseToString(this.state.addFacility),
             "NeighbouringDataZones":[]
         };
         for (let key in times) {
+            let methodTimeDict = {};
+            let methodTimeString = "";
 
             for (let i = 0; i < geo.features.length; i++){
+                let currentTimes = [];
+
+
                 if(geo.features[i].properties.DataZone === key){
                     //compare new time with old time for neighbours
                     if(geo.features[i].properties.CarTravelTimes[this.state.addFacility] > times[key]["Car"]){
+                        methodTimeString = geo.features[i].properties.CarTravelTimes[this.state.addFacility] + " -> " + times[key]["Car"];
+                        //console.log(methodTimeString);
+                        methodTimeDict["CarChanges"] = methodTimeString;
+                        //console.log(methodTimeDict["CarChanges"]);
+
 
                         geo.features[i].properties.CarTravelTimes[this.state.addFacility] = times[key]["Car"]
                     }
                     if(geo.features[i].properties.PublicTransportTravelTimes[this.state.addFacility] > times[key]["PT"]){
+                        methodTimeString = geo.features[i].properties.PublicTransportTravelTimes[this.state.addFacility] + " -> " + times[key]["PT"];
+                        //console.log(methodTimeString);
+                        methodTimeDict["PTChanges"] = methodTimeString;
+                        //console.log(methodTimeDict["PTChanges"]);
+                        geo.features[i].properties.PublicTransportTravelTimes[this.state.addFacility] = times[key]["PT"];
 
-                        geo.features[i].properties.PublicTransportTravelTimes[this.state.addFacility] = times[key]["PT"]
                     }
+
                 }
                 //assign  0 travel time to data zone facility is located in
                 else if(geo.features[i].properties.DataZone === this.state.addDataZone) {
-
                     geo.features[i].properties.CarTravelTimes[this.state.addFacility] = "1.0";
                     geo.features[i].properties.PublicTransportTravelTimes[this.state.addFacility] = "1.0";
                 }
@@ -304,29 +318,53 @@ export default class AddButton extends React.Component {
 
                 }
 
+
             }
-            let timeArray = [times[key]["Car"], times[key]["PT"]];
+
             let nameKey = this.translateToName(key, geo);
-            console.log(nameKey);
-            let timeDict = {[nameKey]:timeArray};
-            changesDict["NeighbouringDataZones"].push(timeDict);
+            //console.log(nameKey);
+                let timeDict = {[nameKey]: methodTimeDict};
+            //console.log(timeDict);
+
+            //doesnt push if no changes were made
+            if(Object.keys(timeDict[nameKey]).length>0) {
+                changesDict["NeighbouringDataZones"].push(timeDict)
+            }
             //changesDict["NeighbouringDataZones"].push({[key]:times[key]["PT"]})
+            //console.log(changesDict["NeighbouringDataZones"]);
         }
 
         this.setState({listitems : this.state.listitems.concat(changesDict)});
-        console.log("checkchanges finished");
-        console.log(times);
+        //console.log(this.state.listitems);
+        //console.log("checkchanges finished");
 
         this.props.parentCallback(geo);
         this.props.parentCallbackSumbit(this.state.listitems);
     };
 
     translateToName = (datacode, geo) => {
-        console.log(datacode);
+        //console.log(datacode);
         for(let i = 0; i<geo.features.length; i++){
             if(geo.features[i].properties.DataZone === datacode){
                 return geo.features[i].properties.Name;
             }
+        }
+    };
+
+    parseToString = (facility) =>{
+        switch(facility) {
+            case "GP":
+                return "GP";
+            case "PrimarySchool":
+                return "Primary School";
+            case "SecondarySchool":
+                return "Secondary School";
+            case "PostOffice":
+                return "Post Office";
+            case "ShoppingFacility":
+                return "Shopping Facility";
+            default:
+            // code block
         }
     };
 
