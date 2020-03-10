@@ -1,3 +1,12 @@
+#root{
+  height: 100%;
+  width: 100%;
+  background: #243665;
+}
+html {
+  background: #243665;
+}
+
 .main{
   background: #243665;
 }

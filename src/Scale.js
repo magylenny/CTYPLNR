@@ -24,7 +24,7 @@ export default class Scale extends React.Component {
         }
         else{
             timeDiff = 3;
-            segment = <Segment inverted style={{background: "#243665", height:"100%", width:"26.5vw"}}>
+            segment = <Segment inverted style={{background: "rgba(36,54,101,0.7)", height:"100%", width:"26.5vw"}}>
                 <Header inverted>
                     <Header.Content style = {{color: "deepskyblue"}}>Travel times in minutes</Header.Content>
                 </Header>
