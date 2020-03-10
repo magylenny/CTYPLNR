@@ -168,8 +168,8 @@ export default class AddButton extends React.Component {
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
-                'X-Application-Id': 'cd8dab5e',
-                'X-Api-Key': '3b67e6f052bc7121e2f6bcb917024443'
+                'X-Application-Id': '4af0386c',
+                'X-Api-Key': '2eebb47cc3eba9d697483c016477976e'
             }
         };
 
