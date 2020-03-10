@@ -8,6 +8,7 @@ import AddButton from "./AddButton";
 import SideButtons from "./SideButtons";
 import Header from "./Header"
 import ChangeList from "./ChangeList";
+import Import from"./Import";
 import axios from 'axios';
 import 'semantic-ui-css/semantic.min.css'
 import L from 'leaflet';
@@ -56,6 +57,7 @@ class GlasgowMap extends React.Component {
     }
 
     callbackFunction = (childData) => {
+        console.log(childData);
         this.setState({geo: childData});
     };
 
@@ -263,11 +265,13 @@ class GlasgowMap extends React.Component {
             <div className = "main"
 
             >
+
               <Header
                   city = {this.state.city}
                   method = {this.state.method}
                   changeMethod = {this.changeMethod}
                   changeCity = {this.changeCity}
+                  parentCallback={this.callbackFunction}
               />
 
                 {map}
@@ -277,6 +281,7 @@ class GlasgowMap extends React.Component {
                     changeDomain = {this.changeDomain}
                     activeDomains = {this.state.activeDomains}
                     />
+
                 </div>
         );
     }

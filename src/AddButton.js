@@ -382,7 +382,6 @@ export default class AddButton extends React.Component {
     //to load all data zones in dropdown options
    populateDropdown = (data) => {
         datazones = [];
-       console.log(data);
        let code;
        let coords;
        for (let i = 0; i < data.features.length; i++) {

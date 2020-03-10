@@ -3,6 +3,7 @@
   width: 100%;
   background: #243665;
 }
+
 html {
   background: #243665;
 }
@@ -19,8 +20,12 @@ html {
 }
 .methodButtons{
   padding: 0.25rem;
+}
+.importButtons{
+  padding:0.25rem;
 
 }
+
 .title{
   margin-top:1.5vh
 }

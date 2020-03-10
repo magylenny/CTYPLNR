@@ -1,8 +1,13 @@
 import React from 'react';
 import {Button, Grid, Icon} from "semantic-ui-react";
 import Title from './Title';
+import Import from"./Import";
 import './index.css';
 export default class Header extends React.Component {
+
+    gettingImported = (imported) =>{
+        this.props.parentCallback(imported);
+    }
 
     render() {
         let city = this.props.city;
@@ -24,8 +29,8 @@ export default class Header extends React.Component {
         }
         return (
             <div className="header">
-                <Grid columns="equal">
-                    <Grid.Column>
+                <Grid>
+                    <Grid.Column width = {2}>
                         <div className="methodButtons">
                             <Button.Group inverted size='medium' color="blue">
                                 <Button active = {car} icon onClick={ () => this.props.changeMethod('Car')}><Icon name='car'
@@ -36,11 +41,19 @@ export default class Header extends React.Component {
                                     Transport</Button>
                             </Button.Group>
                         </div>
+                    </Grid.Column >
+                  <Grid.Column width = {5}>
+                      <div className = "importButtons">
+                      <Import
+                          gettingImportedJson={this.gettingImported}
+                      />
+                  </div>
+                  </Grid.Column>
+                    <Grid.Column width = {5}>
+                    <Title/>
                     </Grid.Column>
 
-                    <Title/>
-
-                    <Grid.Column textAlign='right'>
+                    <Grid.Column textAlign='right' width={4}>
                         <div className="cityButtons">
                             <Button.Group inverted size='huge' color="blue">
                                 <Button active = {glasgow} onClick={() => this.props.changeCity("Glasgow")}>Glasgow</Button>
