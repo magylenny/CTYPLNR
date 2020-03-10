@@ -14,12 +14,15 @@ export default class ChangeList extends React.Component {
             let currentContent = "";
 
             for(let k = 0; k<Object.keys(array[i]["NeighbouringDataZones"]).length; k++) {
+                let carPercentage;
+                let ptPercentage;
                 let carTime;
                 let ptTime;
                 //get key and value, create a string (line) ,push string line to current content
                 let dz = Object.keys((array[i]["NeighbouringDataZones"][k]));
                 if("CarChanges" in array[i]["NeighbouringDataZones"][k][dz]) {
-                    carTime = "Car: " + array[i]["NeighbouringDataZones"][k][dz]["CarChanges"];
+
+                    carTime = "Car: " + array[i]["NeighbouringDataZones"][k][dz]["CarChanges"] + "";
                 }
                 if("PTChanges" in array[i]["NeighbouringDataZones"][k][dz]) {
                     ptTime = "Public Transport: " + array[i]["NeighbouringDataZones"][k][dz]["PTChanges"];

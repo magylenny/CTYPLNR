@@ -305,6 +305,7 @@ export default class AddButton extends React.Component {
         for (let key in times) {
             let methodTimeDict = {};
             let methodTimeString = "";
+            let carPercentage, ptPercentage;
 
             for (let i = 0; i < geo.features.length; i++){
                 let currentTimes = [];
@@ -313,7 +314,9 @@ export default class AddButton extends React.Component {
                 if(geo.features[i].properties.DataZone === key){
                     //compare new time with old time for neighbours
                     if(geo.features[i].properties.CarTravelTimes[this.state.addFacility] > times[key]["Car"]){
-                        methodTimeString = geo.features[i].properties.CarTravelTimes[this.state.addFacility] + " => " + times[key]["Car"];
+                        carPercentage = times[key]["Car"]/geo.features[i].properties.CarTravelTimes[this.state.addFacility];
+                        carPercentage = 1-Math.round(carPercentage* 100) / 100;
+                        methodTimeString = geo.features[i].properties.CarTravelTimes[this.state.addFacility] + " => " + times[key]["Car"] + " ("+carPercentage*100+ "%)";
                         //console.log(methodTimeString);
                         methodTimeDict["CarChanges"] = methodTimeString;
                         //console.log(methodTimeDict["CarChanges"]);
