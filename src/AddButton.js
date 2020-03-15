@@ -214,7 +214,7 @@ export default class AddButton extends React.Component {
                         let minute = (res.data.results[0].locations[0].properties[0].travel_time) / 60;
 
                         let time = Math.round(minute * 10) / 10;
-                        times[key]["Car"] = time;
+                        times[key]["Car"] = time.toString();
 
                     })
                     .catch((err) => {
@@ -281,7 +281,7 @@ export default class AddButton extends React.Component {
                             let minute = (res.data.results[0].locations[0].properties[0].travel_time) / 60;
 
                             let time = Math.round(minute * 10) / 10;
-                            times[key]["PT"] = time;
+                            times[key]["PT"] = time.toString();
 
                         })
                         .catch((err) => {
@@ -323,7 +323,9 @@ export default class AddButton extends React.Component {
                         geo.features[i].properties.CarTravelTimes[this.state.addFacility] = times[key]["Car"]
                     }
                     if(geo.features[i].properties.PublicTransportTravelTimes[this.state.addFacility] > times[key]["PT"]){
-                        methodTimeString = geo.features[i].properties.PublicTransportTravelTimes[this.state.addFacility] + " => " + times[key]["PT"];
+                        ptPercentage = times[key]["PT"]/geo.features[i].properties.CarTravelTimes[this.state.addFacility];
+                        ptPercentage = 1-Math.round(ptPercentage* 100) / 100;
+                        methodTimeString = geo.features[i].properties.PublicTransportTravelTimes[this.state.addFacility] + " => " + times[key]["PT"] + " ("+ptPercentage*100+ "%)";
                         //console.log(methodTimeString);
                         methodTimeDict["PTChanges"] = methodTimeString;
                         //console.log(methodTimeDict["PTChanges"]);

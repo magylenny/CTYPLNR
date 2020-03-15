@@ -1,4 +1,4 @@
-import React from 'react';
+import React,  { createRef, Component } from 'react';
 import { Map, TileLayer, GeoJSON, Marker} from 'react-leaflet';
 import "leaflet/dist/leaflet.css";
 import './index.css';
@@ -8,7 +8,6 @@ import AddButton from "./AddButton";
 import SideButtons from "./SideButtons";
 import Header from "./Header"
 import ChangeList from "./ChangeList";
-import Import from"./Import";
 import axios from 'axios';
 import 'semantic-ui-css/semantic.min.css'
 import L from 'leaflet';
@@ -55,10 +54,14 @@ class GlasgowMap extends React.Component {
 
         };
     }
+    geoJSONRef = React.createRef();
 
     callbackFunction = (childData) => {
-        console.log(childData);
+        this.geoJSONRef.current.leafletElement.clearLayers();
+        this.geoJSONRef.current.leafletElement.addData(childData);
+
         this.setState({geo: childData});
+
     };
 
     callbackFunctionSubmit = (changes) => {
@@ -91,6 +94,7 @@ class GlasgowMap extends React.Component {
         this.setState({
             method: method
         });
+
     };
 
     changeDomain = (domain) => {
@@ -128,14 +132,12 @@ class GlasgowMap extends React.Component {
    render() {
 
         console.log("re-rendering...");
-
-
         const { isFetching, geo, domain, method,city} = this.state;
+       console.log(geo);
         if(city === "Glasgow"){
             mapCenter = [55.8595, -4.2518];
             zoomLevel = 12;
             minZoomLevel = zoomLevel;
-
         }
         else{
             mapCenter = [55.933251, -3.268267];
@@ -176,6 +178,7 @@ class GlasgowMap extends React.Component {
 
                     <GeoJSON
                         data={geo}
+                        ref={this.geoJSONRef}
                         style={getStyle}
                         onEachFeature={onEachFeature}/>
                 </Map>
@@ -184,10 +187,21 @@ class GlasgowMap extends React.Component {
 
 
         function getStyle(feature){
+
+            if(feature.properties.CarTravelTimes["GP"] === 1){
+               // console.log(feature.properties.Name);
+            }
+            //console.log(geo.features[0].properties.CarTravelTimes[domain]);
             let timeDiff;
             if(domain !== "City"){
                 if(method === "Car") {
+                    console.log(geo.features[0].properties.CarTravelTimes[domain]);
                     time = feature.properties.CarTravelTimes[domain];
+                    if(feature.properties.Name === "Darnley East - 01") {
+                        console.log(geo.features[0].properties.CarTravelTimes[domain]);
+                        console.log(feature.properties.CarTravelTimes["GP"], time);
+                    }
+
                     timeDiff = 1;
                     //console.log(feature.properties.CarTravelTimes, feature.properties.CarTravelTimes["SecondarySchool"]);
                 }
@@ -197,6 +211,7 @@ class GlasgowMap extends React.Component {
                     }
                 }
             else{
+
                 return{
                 color:"black",
                     weight: 1.5,
@@ -206,12 +221,14 @@ class GlasgowMap extends React.Component {
             }
 
                 if(time >= 0 && time < timeDiff){
+
                     return{
                         color: "navy",
                         weight: 1.5
                     }
                 }
                 else if(time >= timeDiff && time < timeDiff*2){
+
                     return{
                         color:"royalblue",
                         weight: 1.5,
@@ -219,6 +236,7 @@ class GlasgowMap extends React.Component {
                     }
                 }
                 else if(time >= timeDiff*2 && time < timeDiff*3){
+                    //console.log(feature.properties.Name, feature.properties.CarTravelTimes["GP"]);
                     return{
                         color:"seagreen",
                         weight: 1.5,
@@ -267,6 +285,7 @@ class GlasgowMap extends React.Component {
             >
 
               <Header
+                  geoJSON={this.state.geo}
                   city = {this.state.city}
                   method = {this.state.method}
                   changeMethod = {this.changeMethod}

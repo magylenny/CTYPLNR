@@ -46,6 +46,7 @@ export default class Header extends React.Component {
                       <div className = "importButtons">
                       <Import
                           gettingImportedJson={this.gettingImported}
+                          geoJSON={this.props.geoJSON}
                       />
                   </div>
                   </Grid.Column>
