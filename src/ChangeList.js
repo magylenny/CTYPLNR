@@ -36,7 +36,7 @@ export default class ChangeList extends React.Component {
                     currentContent = currentContent+line;
                 }
                 if(ptTime){
-                    line = ptTime +"\n";
+                    line = ptTime +"\n"+"\n";
                     currentContent = currentContent+line;
                 }
                 console.log(currentContent);
@@ -48,6 +48,11 @@ export default class ChangeList extends React.Component {
         return arrayOfContents;
 
     };
+
+    uristenit = (item) =>{
+        return item;
+    };
+
 
 
     render() {
@@ -73,7 +78,7 @@ export default class ChangeList extends React.Component {
         const panels = _.times(changes.length, (i) => ({
             key: `panel-${i}`,
             title: changes[i]["Facility"].concat(" in " + changes[i]["DataZone"]),
-            content: {content : contents[i]}
+            content:  {content : contents[i]}
         }));
 
 
@@ -81,7 +86,7 @@ export default class ChangeList extends React.Component {
             <Control>
                 <Segment inverted style={{background: "rgba(36,54,101,0.7)", height:"57vh", width:"14vw"}}>
                     Facilites recently added:
-                    <Accordion style={{overflow: 'auto', maxHeight: 375 }} className="accordion"
+                    <Accordion style={{overflow: 'auto', maxHeight: 375}} className="accordion"
                                exclusive={false}
                                panels={panels}
                                styled

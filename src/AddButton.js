@@ -214,7 +214,7 @@ export default class AddButton extends React.Component {
                         let minute = (res.data.results[0].locations[0].properties[0].travel_time) / 60;
 
                         let time = Math.round(minute * 10) / 10;
-                        times[key]["Car"] = time.toString();
+                        times[key]["Car"] = time;
 
                     })
                     .catch((err) => {
@@ -281,7 +281,7 @@ export default class AddButton extends React.Component {
                             let minute = (res.data.results[0].locations[0].properties[0].travel_time) / 60;
 
                             let time = Math.round(minute * 10) / 10;
-                            times[key]["PT"] = time.toString();
+                            times[key]["PT"] = time;
 
                         })
                         .catch((err) => {
@@ -315,17 +315,21 @@ export default class AddButton extends React.Component {
                     //compare new time with old time for neighbours
                     if(geo.features[i].properties.CarTravelTimes[this.state.addFacility] > times[key]["Car"]){
                         carPercentage = times[key]["Car"]/geo.features[i].properties.CarTravelTimes[this.state.addFacility];
-                        carPercentage = 1-Math.round(carPercentage* 100) / 100;
-                        methodTimeString = geo.features[i].properties.CarTravelTimes[this.state.addFacility] + " => " + times[key]["Car"] + " ("+carPercentage*100+ "%)";
+                        carPercentage = 1-carPercentage;
+                        carPercentage = carPercentage.toFixed(2);
+                        methodTimeString = geo.features[i].properties.CarTravelTimes[this.state.addFacility] + " => " + times[key]["Car"] + " ("+(carPercentage*100).toFixed(0)+ "%)";
                         //console.log(methodTimeString);
                         methodTimeDict["CarChanges"] = methodTimeString;
                         //console.log(methodTimeDict["CarChanges"]);
                         geo.features[i].properties.CarTravelTimes[this.state.addFacility] = times[key]["Car"]
                     }
                     if(geo.features[i].properties.PublicTransportTravelTimes[this.state.addFacility] > times[key]["PT"]){
-                        ptPercentage = times[key]["PT"]/geo.features[i].properties.CarTravelTimes[this.state.addFacility];
-                        ptPercentage = 1-Math.round(ptPercentage* 100) / 100;
-                        methodTimeString = geo.features[i].properties.PublicTransportTravelTimes[this.state.addFacility] + " => " + times[key]["PT"] + " ("+ptPercentage*100+ "%)";
+                        ptPercentage = times[key]["PT"]/geo.features[i].properties.PublicTransportTravelTimes[this.state.addFacility];
+                        console.log(ptPercentage);
+                        ptPercentage = 1-ptPercentage;
+                        ptPercentage = ptPercentage.toFixed(2);
+                        console.log(ptPercentage);
+                        methodTimeString = geo.features[i].properties.PublicTransportTravelTimes[this.state.addFacility] + " => " + times[key]["PT"] + " ("+(ptPercentage*100).toFixed(0)+ "%)";
                         //console.log(methodTimeString);
                         methodTimeDict["PTChanges"] = methodTimeString;
                         //console.log(methodTimeDict["PTChanges"]);

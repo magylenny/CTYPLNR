@@ -1,4 +1,5 @@
 import React,  { createRef, Component } from 'react';
+
 import { Map, TileLayer, GeoJSON, Marker} from 'react-leaflet';
 import "leaflet/dist/leaflet.css";
 import './index.css';
@@ -11,6 +12,9 @@ import ChangeList from "./ChangeList";
 import axios from 'axios';
 import 'semantic-ui-css/semantic.min.css'
 import L from 'leaflet';
+require('@babel/register')({
+    presets: ['es2015', 'react']
+});
 
 delete L.Icon.Default.prototype._getIconUrl;
 
@@ -73,6 +77,7 @@ class GlasgowMap extends React.Component {
     componentDidMount() {
         document.title = 'CTYPLNR';
         this.getGlasgow();
+        return "janos";
     };
 
     getGlasgow = () => {
