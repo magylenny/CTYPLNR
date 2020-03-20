@@ -59,7 +59,7 @@ export default class AddButton extends React.Component {
     handleOpen = () => this.setState({ modalOpen: true });
 
     handleFacilityChange = (event, data) => {
-        console.log(data.value);
+
 ;     this.setState({addFacility: data.value});
     };
 
@@ -86,11 +86,11 @@ export default class AddButton extends React.Component {
             let datacode = parseInt(this.state.addDataZone.substr(1));
             let coords = [];
             coords.push(datazoneCoordinates[datacode]);
-            console.log(coords);
+
             let sourcepolygon = turf.multiPolygon([coords]);
 
             let sourcecentroid = turfCentroid(sourcepolygon);
-            console.log(sourcecentroid);
+
 
             let neighbours = this.getNeighbours();
 
@@ -100,10 +100,6 @@ export default class AddButton extends React.Component {
             this.calculateTravelTimes(sourcecentroid, points, geo);
         }
 
-        // await this.checkChanges(times,geo);
-
-        //console.log(geo);
-       //
 
     };
 
@@ -223,7 +219,7 @@ export default class AddButton extends React.Component {
             );
         }
 
-        console.log(times);
+
         Promise.all(promises).then(() =>this.calculatePTravelTimes(sourcepoint, destpoints,times,geo));
     };
     calculatePTravelTimes = async (sourcepoint, destpoints,times, geo) => {
@@ -296,7 +292,7 @@ export default class AddButton extends React.Component {
 
 
     checkChanges = async(times, geo)  => {
-        console.log("most leptem be");
+
         let changesDict={
             "DataZone":this.translateToName(this.state.addDataZone, geo),
             "Facility":this.parseToString(this.state.addFacility),
@@ -318,21 +314,21 @@ export default class AddButton extends React.Component {
                         carPercentage = 1-carPercentage;
                         carPercentage = carPercentage.toFixed(2);
                         methodTimeString = geo.features[i].properties.CarTravelTimes[this.state.addFacility] + " => " + times[key]["Car"] + " ("+(carPercentage*100).toFixed(0)+ "%)";
-                        //console.log(methodTimeString);
+
                         methodTimeDict["CarChanges"] = methodTimeString;
-                        //console.log(methodTimeDict["CarChanges"]);
+
                         geo.features[i].properties.CarTravelTimes[this.state.addFacility] = times[key]["Car"]
                     }
                     if(geo.features[i].properties.PublicTransportTravelTimes[this.state.addFacility] > times[key]["PT"]){
                         ptPercentage = times[key]["PT"]/geo.features[i].properties.PublicTransportTravelTimes[this.state.addFacility];
-                        console.log(ptPercentage);
+
                         ptPercentage = 1-ptPercentage;
                         ptPercentage = ptPercentage.toFixed(2);
-                        console.log(ptPercentage);
+
                         methodTimeString = geo.features[i].properties.PublicTransportTravelTimes[this.state.addFacility] + " => " + times[key]["PT"] + " ("+(ptPercentage*100).toFixed(0)+ "%)";
-                        //console.log(methodTimeString);
+
                         methodTimeDict["PTChanges"] = methodTimeString;
-                        //console.log(methodTimeDict["PTChanges"]);
+
                         geo.features[i].properties.PublicTransportTravelTimes[this.state.addFacility] = times[key]["PT"];
 
                     }
@@ -341,28 +337,26 @@ export default class AddButton extends React.Component {
             }
 
             let nameKey = this.translateToName(key, geo);
-            //console.log(nameKey);
+
                 let timeDict = {[nameKey]: methodTimeDict};
-            //console.log(timeDict);
+
 
             //doesnt push if no changes were made
             if(Object.keys(timeDict[nameKey]).length>0) {
                 changesDict["NeighbouringDataZones"].push(timeDict)
             }
-            //changesDict["NeighbouringDataZones"].push({[key]:times[key]["PT"]})
-            //console.log(changesDict["NeighbouringDataZones"]);
+
         }
 
         this.setState({listitems : this.state.listitems.concat(changesDict)});
-        //console.log(this.state.listitems);
-        //console.log("checkchanges finished");
+
 
         this.props.parentCallback(geo);
         this.props.parentCallbackSumbit(this.state.listitems);
     };
 
     translateToName = (datacode, geo) => {
-        console.log(datacode);
+
         for(let i = 0; i<geo.features.length; i++){
             if(geo.features[i].properties.DataZone === datacode){
                 return geo.features[i].properties.Name;
@@ -371,7 +365,7 @@ export default class AddButton extends React.Component {
     };
 
     parseToString = (facility) =>{
-        console.log(facility);
+
         switch(facility) {
             case "GP":
                 return "GP";

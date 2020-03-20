@@ -1,5 +1,4 @@
 import React,  { createRef, Component } from 'react';
-
 import { Map, TileLayer, GeoJSON, Marker} from 'react-leaflet';
 import "leaflet/dist/leaflet.css";
 import './index.css';
@@ -28,13 +27,16 @@ let mapCenter;
 let zoomLevel;
 let minZoomLevel;
 let time = 0;
-
 const tileLayerAtrribute = '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors';
 let tileLayerUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
-
 let glasgow = "https://api.npoint.io/aa3a9094c684db09d0f8";
-
 let methodBoolean = true;
+
+export const doDecrement = (prevState) => ({
+    counter: prevState.counter - 1,
+});
+
+
 class GlasgowMap extends React.Component {
 
     constructor(props){
@@ -77,7 +79,7 @@ class GlasgowMap extends React.Component {
     componentDidMount() {
         document.title = 'CTYPLNR';
         this.getGlasgow();
-        return "janos";
+
     };
 
     getGlasgow = () => {
@@ -136,9 +138,9 @@ class GlasgowMap extends React.Component {
 
    render() {
 
-        console.log("re-rendering...");
+
         const { isFetching, geo, domain, method,city} = this.state;
-       console.log(geo);
+
         if(city === "Glasgow"){
             mapCenter = [55.8595, -4.2518];
             zoomLevel = 12;
@@ -194,21 +196,18 @@ class GlasgowMap extends React.Component {
         function getStyle(feature){
 
             if(feature.properties.CarTravelTimes["GP"] === 1){
-               // console.log(feature.properties.Name);
+
             }
-            //console.log(geo.features[0].properties.CarTravelTimes[domain]);
+
             let timeDiff;
             if(domain !== "City"){
                 if(method === "Car") {
-                    console.log(geo.features[0].properties.CarTravelTimes[domain]);
+
                     time = feature.properties.CarTravelTimes[domain];
-                    if(feature.properties.Name === "Darnley East - 01") {
-                        console.log(geo.features[0].properties.CarTravelTimes[domain]);
-                        console.log(feature.properties.CarTravelTimes["GP"], time);
-                    }
+
 
                     timeDiff = 1;
-                    //console.log(feature.properties.CarTravelTimes, feature.properties.CarTravelTimes["SecondarySchool"]);
+
                 }
                 else{
                         time = feature.properties.PublicTransportTravelTimes[domain];
@@ -241,7 +240,7 @@ class GlasgowMap extends React.Component {
                     }
                 }
                 else if(time >= timeDiff*2 && time < timeDiff*3){
-                    //console.log(feature.properties.Name, feature.properties.CarTravelTimes["GP"]);
+
                     return{
                         color:"seagreen",
                         weight: 1.5,

@@ -14,8 +14,7 @@ export default class ChangeList extends React.Component {
             let currentContent = "";
 
             for(let k = 0; k<Object.keys(array[i]["NeighbouringDataZones"]).length; k++) {
-                let carPercentage;
-                let ptPercentage;
+
                 let carTime;
                 let ptTime;
                 //get key and value, create a string (line) ,push string line to current content
@@ -27,9 +26,9 @@ export default class ChangeList extends React.Component {
                 if("PTChanges" in array[i]["NeighbouringDataZones"][k][dz]) {
                     ptTime = "Public Transport: " + array[i]["NeighbouringDataZones"][k][dz]["PTChanges"];
                 }
-                //console.log(ptTime);
+
                 let line = dz + "\n";
-                //console.log(line);
+
                 currentContent = currentContent + line;
                 if(carTime) {
                     line = carTime + "\n";
@@ -39,20 +38,16 @@ export default class ChangeList extends React.Component {
                     line = ptTime +"\n"+"\n";
                     currentContent = currentContent+line;
                 }
-                console.log(currentContent);
+
             }
             //push string (currentContent) to array
             arrayOfContents.push(currentContent);
-            //console.log(arrayOfContents);
+
         }
+        console.log(arrayOfContents.toString());
         return arrayOfContents;
 
     };
-
-    uristenit = (item) =>{
-        return item;
-    };
-
 
 
     render() {

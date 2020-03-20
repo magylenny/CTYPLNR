@@ -25,7 +25,7 @@ export default class Import extends Component {
     render(url) {
         const downloadFile = async () => {
             console.log(this.props.geoJSON);
-            const fileName = "file";
+            const fileName = "CityPlanner_GeoJSON";
             const blob = new Blob([JSON.stringify(this.props.geoJSON)],{type:'application/json'});
             const href = await URL.createObjectURL(blob);
             const link = document.createElement('a');
