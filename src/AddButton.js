@@ -384,6 +384,7 @@ export default class AddButton extends React.Component {
 
     //to load all data zones in dropdown options
    populateDropdown = (data) => {
+
         datazones = [];
        let code;
        let coords;
@@ -407,6 +408,7 @@ export default class AddButton extends React.Component {
     render() {
 
         const geojson = this.props.geo;
+
 
         return(
 

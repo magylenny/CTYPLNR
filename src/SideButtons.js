@@ -25,7 +25,7 @@ export default class Title extends React.Component {
         }
 
         return (
-            <Router>
+
             <div className="side-bar-container">
                 {
                     methodBoolean ?
@@ -114,7 +114,7 @@ export default class Title extends React.Component {
                         </div>
                 }
             </div>
-            </Router>
+
         );
     }
 }
