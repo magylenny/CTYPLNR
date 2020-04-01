@@ -37,7 +37,7 @@ export const doDecrement = (prevState) => ({
 });
 
 
-class GlasgowMap extends React.Component {
+class CityMap extends React.Component {
 
     constructor(props){
         super(props);
@@ -310,4 +310,4 @@ class GlasgowMap extends React.Component {
     }
 }
 
-export default GlasgowMap;
+export default CityMap;

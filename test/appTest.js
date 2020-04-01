@@ -1,8 +1,7 @@
-
 import React from 'react';
 import sinon from 'sinon';
 import "babel-polyfill";
-import GlasgowMap from "../src/GlasgowMap.js";
+import CityMap from "../src/CityMap.js";
 import {Button, Grid, Icon} from "semantic-ui-react";
 import { mount, render, shallow, configure} from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
@@ -35,16 +34,16 @@ const getEdinburghData = function(){
         return res.data;
     });
 };
-describe('GlasgowMap.js Unit/Light integration(shallow)', () => {
-    const wrapper = shallow(<GlasgowMap/>);
-    it('should change GlasgowMap method', () => {
+describe('CityMap Unit/Light integration(shallow)', () => {
+    const wrapper = shallow(<CityMap/>);
+    it('should change CityMap method', () => {
 
         expect(wrapper.instance().state.method).equal("Car");
         wrapper.instance().changeMethod("PublicTransport");
         expect(wrapper.instance().state.method).equal("PublicTransport");
 
     });
-    it('should change GlasgowMap domain', () => {
+    it('should change CityMap domain', () => {
 
         expect(wrapper.instance().state.domain).equal("City");
         wrapper.instance().changeDomain("PostOffice");
@@ -137,9 +136,14 @@ describe('GlasgowMap.js Unit/Light integration(shallow)', () => {
 });
 
 describe('Header.js Unit/Light integration', () =>{
-        const wrapper = shallow(<GlasgowMap/>);
+        const wrapper = mount(<CityMap/>);
         let headerWrapper = shallow(<Header changeMethod = {wrapper.instance().changeMethod}
                                             changeDomain = {wrapper.instance().changeDomain}/>);
+    it('should change parent`s method state', () => {
+        expect(wrapper.state().method).equal("Car");
+        headerWrapper.find(Button).at(1).simulate('click');
+        expect(wrapper.state().method).equal("PublicTransport");
+    });
     it('should render Grid component', () =>{
         expect(headerWrapper.find(Grid)).to.have.length(1);
     });
@@ -156,15 +160,11 @@ describe('Header.js Unit/Light integration', () =>{
     it('should render Title component', () =>{
         expect(headerWrapper.find(Title)).to.have.length(1);
     });
-    it('should change parent`s method state', () => {
-        expect(wrapper.state().method).equal("Car");
-        headerWrapper.find(Button).at(1).simulate('click');
-        expect(wrapper.state().method).equal("PublicTransport");
-    });
+
 });
 
 describe('Import.js Unit/Light integration', () =>{
-    const importWrapper = shallow(<Import/>);
+    const importWrapper = mount(<Import/>);
     it('should render Button component', () =>{
         expect(importWrapper.find(Button)).to.have.length(2);
     });
@@ -189,7 +189,7 @@ describe('Title Unit/Light integration', () =>{
 
 describe('SideButtons.js Unit/Light integration', () =>{
 
-    const wrapper = shallow(<GlasgowMap/>);
+    const wrapper = shallow(<CityMap/>);
     let sideButtonWrapper = shallow(<SideButtons activeDomains = {wrapper.state().activeDomains}
                                               method = {wrapper.state().method}
                                               changeDomain = {wrapper.instance().changeDomain}/>);
@@ -224,8 +224,8 @@ describe('SideButtons.js Unit/Light integration', () =>{
         });
 });*/
 
-/*describe('GlasgowMap.js/Header.js/SideButtons.js integration', ()=> {
-    const wrapper = shallow(<GlasgowMap/>);
+/*describe('Mapder.js/SideButtons.js integration', ()=> {
+    const wrapper = shallow(<CityMap/>);
     let sideButtonWrapper = shallow(<SideButtons activeDomains={wrapper.state().activeDomains}
                                                  method={wrapper.state().method}
                                                  changeDomain={wrapper.instance().changeDomain}/>);
@@ -239,8 +239,8 @@ describe('SideButtons.js Unit/Light integration', () =>{
 });*/
 
 //testing async
-describe('GlasgowMap.js async functions', ()=> {
-    const wrapper = shallow(<GlasgowMap/>);
+describe('Mapnc functions', ()=> {
+    const wrapper = shallow(<CityMap/>);
     it('should fetch', () => {
 
         expect(wrapper.state().isFetching).equal(true);

@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import GlasgowMap from './GlasgowMap.js';
+import CityMap from './CityMap.js';
 
 
-ReactDOM.render(<GlasgowMap >
-</GlasgowMap>, document.getElementById('root'));
+ReactDOM.render(<CityMap >
+</CityMap>, document.getElementById('root'));
