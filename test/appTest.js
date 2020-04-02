@@ -136,14 +136,9 @@ describe('CityMap Unit/Light integration(shallow)', () => {
 });
 
 describe('Header.js Unit/Light integration', () =>{
-        const wrapper = mount(<CityMap/>);
+        const wrapper = shallow(<CityMap/>);
         let headerWrapper = shallow(<Header changeMethod = {wrapper.instance().changeMethod}
                                             changeDomain = {wrapper.instance().changeDomain}/>);
-    it('should change parent`s method state', () => {
-        expect(wrapper.state().method).equal("Car");
-        headerWrapper.find(Button).at(1).simulate('click');
-        expect(wrapper.state().method).equal("PublicTransport");
-    });
     it('should render Grid component', () =>{
         expect(headerWrapper.find(Grid)).to.have.length(1);
     });
@@ -160,7 +155,11 @@ describe('Header.js Unit/Light integration', () =>{
     it('should render Title component', () =>{
         expect(headerWrapper.find(Title)).to.have.length(1);
     });
-
+    it('should change parent`s method state', () => {
+        expect(wrapper.state().method).equal("Car");
+        headerWrapper.find(Button).at(1).simulate('click');
+        expect(wrapper.state().method).equal("PublicTransport");
+    });
 });
 
 describe('Import.js Unit/Light integration', () =>{
