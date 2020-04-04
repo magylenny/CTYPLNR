@@ -262,10 +262,3 @@ describe('ChangeList.js Unit', async() =>{
         expect(changeWrapper.find(Accordion)).to.have.length(1);
     });
 });
-
-
-
-
-
-
-
