@@ -78,12 +78,6 @@ class CityMap extends React.Component {
 
     componentDidMount() {
         document.title = 'CTYPLNR';
-        this.getGlasgow();
-
-    };
-
-    getGlasgow = () => {
-
         this.setState({isFetching: true});
         axios.get(glasgow).then(res => {
             this.setState({
@@ -92,6 +86,12 @@ class CityMap extends React.Component {
                 domain: 'City',
             });
         });
+
+    };
+
+    getGlasgow = () => {
+
+
     };
 
     changeMethod = (method) => {

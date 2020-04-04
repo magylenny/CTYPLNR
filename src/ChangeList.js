@@ -7,7 +7,7 @@ import './index.css';
 export default class ChangeList extends React.Component {
 
     populateContents = (array) =>{
-        console.log(array);
+
         let arrayOfContents = [];
 
         for(let i=0; i<array.length; i++){

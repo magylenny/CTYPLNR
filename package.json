@@ -32,7 +32,7 @@
     "deploy": "gh-pages -d build",
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "mocha --require @babel/register --require jsdom-global/register --require ignore-styles",
+    "test": "mocha --require @babel/register --require jsdom-global/register --require ignore-styles --timeout 500000",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -62,6 +62,7 @@
     "enzyme": "^3.11.0",
     "enzyme-adapter-react-16": "^1.15.2",
     "ignore-styles": "^5.0.1",
+    "jest": "^25.2.7",
     "jsdom": "16.2.1",
     "jsdom-global": "3.0.2"
   },
