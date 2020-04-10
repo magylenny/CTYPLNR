@@ -198,7 +198,7 @@ export default class AddButton extends React.Component {
                         "transportation": {
                             "type": "driving"
                         },
-                        "departure_time": "2020-03-20T10:00:00Z",
+                        "departure_time": "2020-05-20T10:00:00Z",
                         "properties": ["travel_time", "distance", "route"]
                     }
                 ]
@@ -265,7 +265,7 @@ export default class AddButton extends React.Component {
                             "transportation": {
                                 "type": "public_transport"
                             },
-                            "departure_time": "2020-03-20T10:00:00Z",
+                            "departure_time": "2020-05-20T10:00:00Z",
                             "properties": ["travel_time", "distance", "route"]
                         }
                     ]
